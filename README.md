@@ -3,7 +3,7 @@
 > 使用 Vue 2.0 制作的连连看游戏
 
 
-[Online Demo](http://woshiguabi.github.io/linklinkup/)
+<a href="http://woshiguabi.github.io/linklinkup/" target="_blank">Online Demo</a>
  
 ## Build Setup
 
