@@ -2,8 +2,9 @@
 
 > 使用 Vue 2.0 制作的连连看游戏
 
-> A link-link-up game by Vue 2.0
 
+[Online Demo](http://woshiguabi.github.io/linklinkup/)
+ 
 ## Build Setup
 
 ``` bash
