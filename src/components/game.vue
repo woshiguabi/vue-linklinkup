@@ -95,6 +95,7 @@ export default {
       if (currentCell.isBlank === true) return
 
       this.selectCell(currentCell)
+      this.$forceUpdate()
     },
     // 选择方块
     selectCell (currCell) {
@@ -102,46 +103,49 @@ export default {
         // 如果没有选中任何方块那么就直接设置选中
         currCell.isSelected = true
         this.currentSelect = currCell
-      } else if (this.currentSelect === currCell) {
+        return
+      }
+      if (this.currentSelect === currCell) {
         // 如果点击的方块和已选中方块是同一个，那么就取消这个方块的选中状态
         currCell.isSelected = false
         this.currentSelect = null
-      } else {
-        let prevCell = this.currentSelect
-
-        // 通过className来判断前后两个方块的图片是否相同
-        if (prevCell.className === currCell.className) {
-          // 获取两个方块的连接线路径数组
-          console.time('getLine')
-          let result = this.getLine(prevCell, currCell)
-          console.timeEnd('getLine')
-
-          if (result.length === 0) {
-            // 如果没有获取到连接线，说明两个方块无法连接，那么将点击的方块设置为选中状态
-            currCell.isSelected = true
-            this.currentSelect = currCell
-          } else {
-            // 如果获取到连接线，那么将两个方块设置为空白方块
-            prevCell.isBlank = true
-            currCell.isBlank = true
-            prevCell.className = ''
-            currCell.className = ''
-            currCell.isSelected = false
-            this.currentSelect = null
-
-            // 最后绘制连接线
-            this.drawLine(result)
-          }
-          // 将上一个方块的选中状态清空
-          prevCell.isSelected = false
-        } else {
-          // 如果两个方块的className不同，那么将点击的方块设置为选中状态
-          prevCell.isSelected = false
-          currCell.isSelected = true
-          this.currentSelect = currCell
-        }
+        return
       }
-      this.$forceUpdate()
+
+      let prevCell = this.currentSelect
+      // 通过className来判断前后两个方块的图片是否相同
+      if (prevCell.className !== currCell.className) {
+        // 如果两个方块的className不同，那么将点击的方块设置为选中状态
+        prevCell.isSelected = false
+        currCell.isSelected = true
+        this.currentSelect = currCell
+        return
+      }
+
+      // 获取两个方块的连接线路径数组
+      console.time('getLine')
+      let result = this.getLine(prevCell, currCell)
+      console.timeEnd('getLine')
+
+      if (result.length === 0) {
+        // 如果没有获取到连接线，说明两个方块无法连接，那么将点击的方块设置为选中状态
+        prevCell.isSelected = false
+        currCell.isSelected = true
+        this.currentSelect = currCell
+      } else {
+        // 如果获取到连接线，那么将两个方块设置为空白方块
+        prevCell.isBlank = true
+        currCell.isBlank = true
+        prevCell.className = ''
+        currCell.className = ''
+        prevCell.isSelected = false
+        currCell.isSelected = false
+
+        this.currentSelect = null
+
+        // 最后绘制连接线
+        this.drawLine(result)
+      }
     },
     drawLine (line) {
       // 遍历线上的节点
